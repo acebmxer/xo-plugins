@@ -14,8 +14,7 @@ tools, not power control.
 
 Copy this folder to `/usr/local/lib/node_modules/xo-server-nanokvm` on the
 XO server (this is one of `xo-server`'s default plugin lookup paths, so it
-survives `--update`), then
-restart `xo-server`. If you're using
+survives `--update`), then restart `xo-server`. If you're using
 [install_xen_orchestra](https://github.com/acebmxer/install_xen_orchestra),
 its Custom Plugins menu does this for you automatically.
 
