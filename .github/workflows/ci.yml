@@ -1,0 +1,42 @@
+name: CI
+
+# This repo ships two plain xo-server plugins with no test suite or lint
+# config of their own yet (see package.json in each folder) -- so this is
+# limited to what's actually checkable today: valid package.json, and valid
+# JS syntax. Add real lint/test steps here once either plugin gets test
+# files or a lint config to run.
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+
+permissions:
+  contents: read
+
+jobs:
+  syntax-check:
+    name: Syntax check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Validate each plugin's package.json
+        run: |
+          set -euo pipefail
+          for pkg in */package.json; do
+            echo "Checking ${pkg}"
+            node -e "JSON.parse(require('fs').readFileSync('${pkg}', 'utf8'))"
+          done
+
+      - name: Check JS syntax
+        run: |
+          set -euo pipefail
+          status=0
+          while IFS= read -r -d '' file; do
+            echo "Checking ${file}"
+            node --check "${file}" || status=1
+          done < <(find . -name '*.js' -not -path './node_modules/*' -print0)
+          exit "${status}"
