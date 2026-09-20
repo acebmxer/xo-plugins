@@ -1,0 +1,46 @@
+name: Notify install_xen_orchestra
+
+# Tells install_xen_orchestra to pull a plugin's latest changes back into its
+# own plugins/<name>/ folder, whenever that plugin's folder changes here on
+# main or dev -- so a change made directly in this repo reaches the other
+# one without anyone having to remember to run scripts/plugin-pull.sh there.
+
+on:
+  push:
+    branches: ["main", "dev"]
+
+permissions:
+  contents: read
+
+jobs:
+  notify:
+    name: Dispatch plugin-updated event
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Notify for each changed plugin
+        env:
+          GH_TOKEN: ${{ secrets.INSTALL_XEN_ORCHESTRA_SYNC_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          before="${{ github.event.before }}"
+          if [ "$before" = "0000000000000000000000000000000000000000" ]; then
+            changed=$(find . -mindepth 1 -maxdepth 1 -type d -name 'xo-server-*' -exec basename {} \;)
+          else
+            changed=$(git diff --name-only "$before" "${{ github.event.after }}" | cut -d/ -f1 | sort -u)
+          fi
+
+          for plugin in $changed; do
+            if [ -d "$plugin" ] && [ -f "$plugin/package.json" ]; then
+              echo "Notifying install_xen_orchestra: ${plugin} (${{ github.ref_name }})"
+              gh api repos/acebmxer/install_xen_orchestra/dispatches \
+                -f event_type=xo-plugins-updated \
+                -f "client_payload[plugin]=${plugin}" \
+                -f "client_payload[branch]=${{ github.ref_name }}"
+            fi
+          done

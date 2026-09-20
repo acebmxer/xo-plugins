@@ -23,6 +23,8 @@ itself — see [LICENSE](LICENSE).
 
 These plugins are also shipped inside
 [install_xen_orchestra](https://github.com/acebmxer/install_xen_orchestra)'s
-`plugins/` folder, for its `--custom-plugins` installer. The two copies are
-kept in sync; this repo exists for anyone who wants the plugins without the
-rest of that project.
+`plugins/` folder, for its `--custom-plugins` installer, which is the
+source of truth for them. The two copies are kept in sync automatically by
+CI on both sides (see [`notify-install-repo.yml`](.github/workflows/notify-install-repo.yml)
+here and `docs/custom-plugins.md` there); this repo exists for anyone who
+wants the plugins without the rest of that project.
