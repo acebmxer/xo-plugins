@@ -9,6 +9,8 @@ plugin, so each entry names which plugin it's about.
 
 ## [Unreleased]
 
+## [xo-server-host-power-manager 0.2.0] - 2026-09-20
+
 ### Added
 
 - `xo-server-host-power-manager`: added two memory metrics, "Lowest free
