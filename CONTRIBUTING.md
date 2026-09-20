@@ -20,11 +20,11 @@ Each plugin is a plain `xo-server` plugin (a `xo-server-*` npm package) with
 no build step. You need:
 
 - Node.js >= 18
-- No lint config or test suite exists yet for either plugin (see the comment
-  at the top of [`ci.yml`](.github/workflows/ci.yml)) — CI only validates
-  each `package.json` and checks JS syntax with `node --check`. If you add
-  the first test file or lint config for a plugin, wire the matching CI step
-  in the same pull request rather than leaving it silently unrun.
+- Each plugin has a `test/` folder using Node's built-in test runner
+  (`node --test`, via `npm test` in that plugin's folder) — no test
+  framework dependency to install. No lint config exists yet for either
+  plugin. If you add the first lint config for a plugin, wire the matching
+  CI step in the same pull request rather than leaving it silently unrun.
 
 ## Before opening a pull request
 
@@ -37,6 +37,9 @@ for pkg in */package.json; do
 done
 
 find . -name '*.js' -not -path './node_modules/*' -exec node --check {} \;
+
+# then, from each plugin's own folder that has a test/ folder:
+npm test
 ```
 
 ## Coding conventions
