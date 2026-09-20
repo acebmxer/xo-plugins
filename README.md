@@ -8,7 +8,7 @@
 [![Forks](https://img.shields.io/github/forks/acebmxer/xo-plugins)](https://github.com/acebmxer/xo-plugins/forks)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D18-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
 [![xo-server-nanokvm](https://img.shields.io/badge/xo--server--nanokvm-v0.1.1-informational)](xo-server-nanokvm/package.json)
-[![xo-server-host-power-manager](https://img.shields.io/badge/xo--server--host--power--manager-v0.1.1-informational)](xo-server-host-power-manager/package.json)
+[![xo-server-host-power-manager](https://img.shields.io/badge/xo--server--host--power--manager-v0.2.0-informational)](xo-server-host-power-manager/package.json)
 
 Custom [Xen Orchestra](https://xen-orchestra.com/) `xo-server` plugins,
 usable on their own — no dependency on any other project.

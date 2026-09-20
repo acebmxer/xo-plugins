@@ -1,10 +1,9 @@
 name: CI
 
-# This repo ships two plain xo-server plugins with no test suite or lint
-# config of their own yet (see package.json in each folder) -- so this is
-# limited to what's actually checkable today: valid package.json, and valid
-# JS syntax. Add real lint/test steps here once either plugin gets test
-# files or a lint config to run.
+# Each plugin's package.json is checked for validity and its JS for syntax
+# errors, then any plugin with a "test" script (both do, as of the node:test
+# suites under test/) has that script run. No lint config exists yet for
+# either plugin.
 
 on:
   push:
@@ -40,3 +39,24 @@ jobs:
             node --check "${file}" || status=1
           done < <(find . -name '*.js' -not -path './node_modules/*' -print0)
           exit "${status}"
+
+  test:
+    name: Run tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Run each plugin's test script, where it has one
+        run: |
+          set -euo pipefail
+          for pkg in */package.json; do
+            dir=$(dirname "${pkg}")
+            has_test_script=$(node -e "const s=require('./${pkg}').scripts; console.log(s && s.test ? 'yes' : 'no')")
+            if [ "${has_test_script}" = "yes" ]; then
+              echo "Testing ${dir}"
+              (cd "${dir}" && npm test)
+            else
+              echo "No test script for ${dir}, skipping"
+            fi
+          done
