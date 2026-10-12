@@ -9,6 +9,8 @@ plugin, so each entry names which plugin it's about.
 
 ## [Unreleased]
 
+## [xo-server-host-power-manager 0.2.1] - 2026-10-12
+
 ### Fixed
 
 - `xo-server-host-power-manager`: adding a second (or later) rule through
