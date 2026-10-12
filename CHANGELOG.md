@@ -9,6 +9,22 @@ plugin, so each entry names which plugin it's about.
 
 ## [Unreleased]
 
+## [xo-server-host-power-manager 0.2.1] - 2026-10-12
+
+### Fixed
+
+- `xo-server-host-power-manager`: adding a second (or later) rule through
+  XO's plugin configuration form failed with `invalid parameters` /
+  `must have required property 'cpu'`. The configuration schema required
+  every rule to include both a `cpu` and a `memory` trigger object, but XO's
+  generic schema-driven config form only submits a trigger's object if the
+  user actually expanded that section — leaving one collapsed (e.g. a
+  memory-only rule where CPU is never touched) omits the key from the
+  payload entirely instead of sending `{ metric: 'none' }`. `cpu` and
+  `memory` are no longer required at the schema level, and a missing one is
+  now normalized to `{ metric: 'none' }` when configuration loads, matching
+  the schema's own documented behavior that a trigger can be skipped.
+
 ## [xo-server-host-power-manager 0.2.0] - 2026-09-20
 
 ### Added
