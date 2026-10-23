@@ -47,6 +47,16 @@ jobs:
           behind=$(git rev-list --count origin/dev..HEAD)
 
           if [ "$ahead" -gt 0 ]; then
+            # install_xen_orchestra's plugin sync pushes the same change to dev
+            # and later to main as two separate commits, so the branches differ
+            # in history while holding the same files. If merging main into dev
+            # would change nothing, dev already has everything main has: leave
+            # it alone. The next dev -> main pull request lines the history up.
+            if merged=$(git merge-tree --write-tree --no-messages origin/dev HEAD) &&
+               [ "$merged" = "$(git rev-parse 'origin/dev^{tree}')" ]; then
+              echo "dev has $ahead commit(s) main does not, but already holds every change on main — nothing to move."
+              exit 0
+            fi
             echo "::error::dev has $ahead commit(s) main does not — refusing to move it."
             echo "Merge dev into main first, then re-run this workflow."
             exit 1
